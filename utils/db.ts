@@ -3,8 +3,6 @@ import { DB_PORT } from "./constants";
 
 const { DB_NAME, DB_USERNAME, DB_PASSWORD, DB_HOST } = process.env;
 
-console.log({ DB_NAME, DB_USERNAME, DB_PASSWORD, DB_HOST });
-
 const db = ServerlessMysql({
   config: {
     database: DB_NAME,
