@@ -8,7 +8,7 @@ const app: Express = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: "*"
   })
 );
 
@@ -17,6 +17,7 @@ app.use(express.json());
 
 // Define Routes
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/user", require("./routes/userRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

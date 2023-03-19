@@ -44,7 +44,7 @@ export const login = async (req: Request, res: Response) => {
  * Admin signup
  */
 export const signup = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, userTypeId } = req.body;
   const currentDateTime = getCurrentDateTime();
   const user = await (
     await db.query("SELECT * FROM users WHERE email = ?;", [email])
@@ -57,7 +57,7 @@ export const signup = async (req: Request, res: Response) => {
   const cryptedPassword = await bcrypt.hash(password, salt);
 
   db.query(
-    "INSERT INTO users (first_name, last_name, email, password, created_at, last_logged_at) VALUES (?, ?, ?, ?, ?, ?);",
+    "INSERT INTO users (first_name, last_name, email, password, created_at, last_logged_at, id_user_type) VALUES (?, ?, ?, ?, ?, ?, ?);",
     [
       firstName,
       lastName,
@@ -65,6 +65,7 @@ export const signup = async (req: Request, res: Response) => {
       cryptedPassword,
       currentDateTime,
       currentDateTime,
+      userTypeId
     ]
   )
     .then(() => {

@@ -8,3 +8,8 @@ export interface IOkPacket {
   protocol41: boolean;
   changedRows: number;
 }
+
+export interface IUserType {
+  id: number;
+  type: string;
+}
