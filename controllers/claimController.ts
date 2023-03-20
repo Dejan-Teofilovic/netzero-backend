@@ -5,7 +5,7 @@ const db = require("../utils/db");
 
 /* Get the claims of a user */
 export const getClaimsByUserId = async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
   db.query(
     `
       SELECT 
