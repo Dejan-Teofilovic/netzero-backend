@@ -29,8 +29,8 @@ export const getClaimsByUserId = async (req: Request, res: Response) => {
 
 /* Claim new tokens */
 export const claim = async (req: Request, res: Response) => {
-  const { tokenAmount, ethAmount, carbonAmount, feeAmount, userId } = req.body;
-  const { walletAddressId } = req.params;
+  const { tokenAmount, ethAmount, carbonAmount, feeAmount, walletAddressId } =
+    req.body;
   const currentDateTime = getCurrentDateTime();
 
   try {
@@ -46,18 +46,7 @@ export const claim = async (req: Request, res: Response) => {
         currentDateTime
       ]
     );
-    await db.query(
-      `
-        SELECT 
-          claims.*,
-          wallet_addresses.wallet_address
-        FROM claims
-        LEFT JOIN wallet_addresses ON claims.id_wallet_address = wallet_addresses.id
-        LEFT JOIN users ON wallet_addresses.id_user = users.id
-        WHERE users.id = ?;
-      `,
-      [userId]
-    );
+    return res.sendStatus(200);
   } catch (error) {
     console.log(">>>>>> error of claim => ", error);
     return res.sendStatus(500);
