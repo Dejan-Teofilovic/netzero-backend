@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { getCurrentDateTime } from "../utils/functions";
-import { IClaim } from "../utils/interfaces";
+import { IClaim, IMintableClaim } from "../utils/interfaces";
 const db = require("../utils/db");
 
 /* Get the claims of a user */
-export const getClaimsByUserId = async (req: Request, res: Response) => {
+export const getClaimsByUserId = (req: Request, res: Response) => {
   const { userId } = req.params;
   db.query(
     `
@@ -51,4 +51,29 @@ export const claim = async (req: Request, res: Response) => {
     console.log(">>>>>> error of claim => ", error);
     return res.sendStatus(500);
   }
+};
+
+/* Get mintable claims */
+export const getMintableClaims = (req: Request, res: Response) => {
+  db.query(
+    `
+      SELECT 
+        claims.*,
+        wallet_addresses.wallet_address,
+        wallet_addresses.id_user,
+        users.first_name AS user_first_name,
+        users.last_name AS user_last_name
+      FROM claims
+      LEFT JOIN wallet_addresses ON claims.id_wallet_address = wallet_addresses.id
+      LEFT JOIN users ON wallet_addresses.id_user = users.id
+      WHERE claims.mintable_token_amount > 0;
+    `
+  )
+    .then((results: Array<IMintableClaim>) => {
+      return res.json(results);
+    })
+    .catch((error: Error) => {
+      console.log(">>>>>>>> error of getClaimByUserId => ", error);
+      return res.sendStatus(500);
+    });
 };

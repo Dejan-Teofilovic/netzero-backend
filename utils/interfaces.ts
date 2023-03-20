@@ -26,3 +26,19 @@ export interface IClaim {
   created_at: string;
   updated_at: string;
 }
+
+export interface IMintableClaim {
+  id: number;
+  id_wallet_address: number;
+  id_user: number;
+  user_first_name: string;
+  user_last_name: string;
+  wallet_address: string;
+  token_amount: number;
+  eth_amount: number;
+  carbon_amount: number;
+  fee_amount: number;
+  mintable_token_amount: number;
+  created_at: string;
+  updated_at: string;
+}
