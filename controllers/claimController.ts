@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getCurrentDateTime } from "../utils/functions";
-import { IClaim, IMintableClaim } from "../utils/interfaces";
+import { IMyClaim, IMintableClaim, IClaim } from "../utils/interfaces";
 const db = require("../utils/db");
 
 /* Get the claims of a user */
@@ -18,7 +18,7 @@ export const getClaimsByUserId = (req: Request, res: Response) => {
     `,
     [userId]
   )
-    .then((results: Array<IClaim>) => {
+    .then((results: Array<IMyClaim>) => {
       return res.json(results);
     })
     .catch((error: Error) => {
@@ -74,6 +74,29 @@ export const getMintableClaims = (req: Request, res: Response) => {
     })
     .catch((error: Error) => {
       console.log(">>>>>>>> error of getClaimByUserId => ", error);
+      return res.sendStatus(500);
+    });
+};
+
+/* Get claim by its id */
+export const getClaimById = (req: Request, res: Response) => {
+  const { claimId } = req.params;
+  db.query(
+    `
+    SELECT 
+      claims.*, 
+      wallet_addresses.wallet_address 
+    FROM claims 
+    LEFT JOIN wallet_addresses ON wallet_addresses.id = claims.id_wallet_address
+    WHERE claims.id = ?;
+  `,
+    [Number(claimId)]
+  )
+    .then((results: Array<IMyClaim>) => {
+      return res.json(results[0]);
+    })
+    .catch((error: Error) => {
+      console.log(">>>>>>> error of getClaimById => ", error);
       return res.sendStatus(500);
     });
 };
