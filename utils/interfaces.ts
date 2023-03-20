@@ -13,3 +13,16 @@ export interface IUserType {
   id: number;
   type: string;
 }
+
+export interface IClaim {
+  id: number;
+  id_wallet_address: number;
+  wallet_address: string;
+  token_amount: number;
+  eth_amount: number;
+  carbon_amount: number;
+  fee_amount: number;
+  mintable_token_amount: number;
+  created_at: string;
+  updated_at: string;
+}
