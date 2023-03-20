@@ -44,46 +44,51 @@ export const login = async (req: Request, res: Response) => {
  * Admin signup
  */
 export const signup = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password, userTypeId } = req.body;
-  const currentDateTime = getCurrentDateTime();
-  const user = await (
-    await db.query("SELECT * FROM users WHERE email = ?;", [email])
-  )[0];
-  if (user) {
-    return res.sendStatus(400);
-  }
+  try {
+    const { firstName, lastName, email, password, userTypeId } = req.body;
+    const currentDateTime = getCurrentDateTime();
+    const user = await (
+      await db.query("SELECT * FROM users WHERE email = ?;", [email])
+    )[0];
+    if (user) {
+      return res.sendStatus(400);
+    }
 
-  const salt = await bcrypt.genSalt(10);
-  const cryptedPassword = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const cryptedPassword = await bcrypt.hash(password, salt);
 
-  db.query(
-    "INSERT INTO users (first_name, last_name, email, password, created_at, last_logged_at, id_user_type) VALUES (?, ?, ?, ?, ?, ?, ?);",
-    [
-      firstName,
-      lastName,
-      email,
-      cryptedPassword,
-      currentDateTime,
-      currentDateTime,
-      userTypeId
-    ]
-  )
-    .then(() => {
-      jwt.sign(
-        { ...req.body },
-        config.get("jwtSecret"),
-        { expiresIn: "5 days" },
-        (error: Error, token: string) => {
-          if (error) {
-            return res.sendStatus(500);
-          }
-          return res.json(token);
+    const { insertId } = await db.query(
+      "INSERT INTO users (first_name, last_name, email, password, created_at, last_logged_at, id_user_type) VALUES (?, ?, ?, ?, ?, ?, ?);",
+      [
+        firstName,
+        lastName,
+        email,
+        cryptedPassword,
+        currentDateTime,
+        currentDateTime,
+        userTypeId
+      ]
+    );
+
+    const createdUser = await (
+      await db.query("SELECT * FROM users WHERE id = ?;", [insertId])
+    )[0];
+
+    jwt.sign(
+      { user: createdUser },
+      config.get("jwtSecret"),
+      { expiresIn: "5 days" },
+      (error: Error, token: string) => {
+        if (error) {
+          return res.sendStatus(500);
         }
-      );
-    })
-    .catch((error: Error) => {
-      return res.sendStatus(500);
-    });
+        return res.json(token);
+      }
+    );
+  } catch (error) {
+    console.log(">>>>>>>> error of signup => ", error);
+    return res.sendStatus(500);
+  }
 };
 
 /**
