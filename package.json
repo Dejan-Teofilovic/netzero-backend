@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mr-new-0509/netzero-backend.git"
+    "url": "git+https://github.com/Dejan-Teofilovic/netzero-backend.git"
   },
   "keywords": [
     "gls"
@@ -19,9 +19,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mr-new-0509/netzero-backend/issues"
+    "url": "https://github.com/Dejan-Teofilovic/netzero-backend/issues"
   },
-  "homepage": "https://github.com/mr-new-0509/netzero-backend#readme",
+  "homepage": "https://github.com/Dejan-Teofilovic/netzero-backend#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "concurrently": "^7.6.0",
